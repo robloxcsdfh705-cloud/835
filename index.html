@@ -13,7 +13,7 @@
             overflow: hidden;
         }
 
-        /* 隱私授權彈窗層（一開始非常乾淨正經，沒人會發現異狀） */
+        /* 隱私授權彈窗層（一開始非常乾淨正經） */
         .overlay {
             position: fixed;
             top: 0; left: 0;
@@ -130,7 +130,7 @@
         // 👹 變形重疊的 Zalgo 詛咒字體與神祕詭異符號庫
         const terrorChars = [
             '☠', '☣', '⚡', '⚙', '⚰', '🪦', '⛧', '⛚', '⎔', '⏆', '⏈', '⏛', '⏠', '⏧', '🃁', '🂱', '🂺', '🃋',
-            'S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑', 'F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓', 'H̶̩̏ȅ̴͇l̵̛͎p̶̲̏', 'ḿ̴̱e̶͎̎', 'D̵E̴S̷T̸R̷O̵Y̵', 'C̶O̵R̵R̷U̸P̵T̸E̸D̶',
+            'S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑', 'F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓', 'H̶̩̏ȅ̴͇l̵̛͎p̶̲̏', 'ḿ̴̱e̶͎̎', 'D̵E̴S̷T̸R̷O̵Y̵', 'C̶O̵R̵R̷U̸P̸T̸E̸D̶',
             '𝔖𝔜𝔖𝔗𝔈𝔐', '𝔉𝔄𝔏𝔏𝔈𝔎', '👹', '👁️', '🩸', '💀', '0x00004188', '0xDEADBEEF', '01001000'
         ];
         
@@ -147,7 +147,6 @@
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 在「亮翠綠」與「深暗綠」之間切換，營造極具衝擊感的科技感
             ctx.fillStyle = Math.random() > 0.1 ? '#00ff00' : '#004400'; 
             ctx.font = 'bold ' + fontSize + 'px monospace';
 
@@ -163,10 +162,32 @@
             }
         }
 
-        // 🟢 終極黑科技：徹底拋棄 YouTube，直接使用網頁底層原生音訊 Audio
-        // 點擊後會直接以標準最高音量播放全球高鐵級直連的 MP3 音訊檔，保證有聲音且絕不報錯！
-        const audio = new Audio("https://r2.dev");
-        audio.loop = true;
+        // 🔊 核心黑科技：用純代碼動態製造「收音機壞掉、訊號不良」的電子故障雜音
+        // 這種雜音不需要連接任何網路，點擊按鈕就會百分之百直接在瀏覽器裡響起來！
+        function playHackerStatic() {
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            var audioCtx = new AudioContext();
+            
+            // 每隔 0.07 秒不間斷地吐出故障電子短路聲
+            setInterval(function() {
+                var osc = audioCtx.createOscillator();
+                var gainNode = audioCtx.createGain();
+                
+                // 隨機在 150Hz 到 1200Hz 之間跳動，聽起來就是訊號受干擾的沙沙雜音
+                osc.frequency.setValueAtTime(Math.random() * 1050 + 150, audioCtx.currentTime);
+                // 採用 sawtooth（鋸齒波），聽起來音色非常粗糙、帶有強烈機器壞掉的感覺
+                osc.type = 'sawtooth'; 
+                
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime); // 安全且清晰的音量
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.07);
+            }, 70);
+        }
 
         function tryFullScreen() {
             const el = document.documentElement;
@@ -186,11 +207,8 @@
             // 2. 啟動每秒 50 次重繪的翠綠色駭客亂碼瀑布
             setInterval(drawTerrorRain, 20);
 
-            // 3. 內嵌原生音訊核心直接播放（1.0 代表瀏覽器允許的最響亮、最大音量）
-            audio.volume = 1.0; 
-            audio.play().catch(err => {
-                console.log("解鎖音訊:", err);
-            });
+            // 3. 核心功能：直接大聲引爆本機產生的電子故障雜音！
+            playHackerStatic();
 
             // 4. 2.5 秒後跳出最後的當機系統警報彈窗，100% 移除任何緩和文字
             setTimeout(() => {
