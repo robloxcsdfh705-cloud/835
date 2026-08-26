@@ -127,7 +127,7 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // 👹 關鍵：這裡注入了大量變形重疊的 Zalgo 詛咒字體與神祕詭異符號
+        // 👹 變形重疊的 Zalgo 詛咒字體與神祕詭異符號庫
         const terrorChars = [
             '☠', '☣', '⚡', '⚙', '⚰', '🪦', '⛧', '⛚', '⎔', '⏆', '⏈', '⏛', '⏠', '⏧', '🃁', '🂱', '🂺', '🃋',
             'S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑', 'F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓', 'H̶̩̏ȅ̴͇l̵̛͎p̶̲̏', 'ḿ̴̱e̶͎̎', 'D̵E̴S̷T̸R̷O̵Y̵', 'C̶O̵R̵R̷U̸P̵T̸E̸D̶',
@@ -144,27 +144,51 @@
 
         // 恐怖亂碼繪製系統
         function drawTerrorRain() {
-            // 背景使用超低透明度的黑色，製造字體快速移動時的恐怖幽靈拖尾殘影
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 隨機在「鮮血紅」與「暗底紅」之間切換，造成螢幕代碼不斷驚悚閃爍的效果
             ctx.fillStyle = Math.random() > 0.1 ? '#ff1111' : '#550000'; 
             ctx.font = 'bold ' + fontSize + 'px monospace';
 
             for (let i = 0; i < rainDrops.length; i++) {
                 const text = terrorChars[Math.floor(Math.random() * terrorChars.length)];
-                
-                // 加上一點點左右隨機位移，讓亂碼看起來像壞掉一樣在發抖、晃動
                 const xOffset = (Math.random() - 0.5) * 4;
                 ctx.fillText(text, (i * fontSize) + xOffset, rainDrops[i] * fontSize);
 
                 if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.98) {
                     rainDrops[i] = 0;
                 }
-                // 隨機加快掉落速度，讓畫面呈現瘋狂暴走的狀態
                 rainDrops[i] += Math.random() > 0.5 ? 1.5 : 1;
             }
+        }
+
+        // 🔊 音效生成器核心：用程式碼動態調配刺耳的故障警報背景音樂
+        function playTerrorMusic() {
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            var audioCtx = new AudioContext();
+            
+            // 無限循環製造尖銳、低沉交替的恐怖電子脈衝音效
+            setInterval(function() {
+                var osc = audioCtx.createOscillator();
+                var gainNode = audioCtx.createGain();
+                
+                // 隨機在超低音（潛水艇警報）與超高音（刺耳雜音）之間切換，造成強烈的精神壓迫
+                var baseFreq = Math.random() > 0.5 ? 120 : 1800;
+                osc.frequency.setValueAtTime(baseFreq + (Math.random() * 400), audioCtx.currentTime);
+                
+                // 採用 sawtooth（鋸齒波）音色，聽起來像是重金屬撕裂和設備壞掉的噪音
+                osc.type = 'sawtooth'; 
+                
+                // 控制音量大小，避免把耳機震壞，維持在有警報感的適中大小
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime); 
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            }, 120);
         }
 
         function tryFullScreen() {
@@ -173,23 +197,27 @@
             if (rfs) rfs.call(el).catch(() => {});
         }
 
-        // 點擊「同意並繼續」按鈕發動機關
+        // 點擊「同意並繼續」按鈕同時發動亂碼瀑布與恐怖音效
         startBtn.addEventListener('click', () => {
             overlay.classList.add('hidden');
             glitchWrap.classList.remove('hidden');
             document.body.classList.add('no-cursor');
 
+            // 1. 強制開啟全螢幕
             tryFullScreen();
 
-            // 超高速重繪（每秒狂刷 50 次），讓恐怖亂碼形成暴風雨
+            // 2. 啟動每秒 50 次重繪的恐怖亂碼暴風雨
             setInterval(drawTerrorRain, 20);
 
-            // 同時彈出連續的崩潰錯誤警報
+            // 3. 核心功能：瞬間啟動高頻刺耳的警報背景音樂！
+            playTerrorMusic();
+
+            // 4. 2秒後彈出無法關閉的崩潰錯誤警報，配合著音樂和亂碼轟炸
             setTimeout(() => {
                 alert("❌ FATAL_ERROR: 核心主引導記錄已遭到強制篡改！");
                 alert("☠ SYSTEM WARNING: 偵測到核心代碼受到不明詛咒侵蝕！");
                 alert("S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑_̷̯̀F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓");
-            }, 2000); // 點擊兩秒後，等他看著亂碼發呆時再彈出彈窗，效果最好！
+            }, 2000);
         });
 
         window.addEventListener('resize', () => {
