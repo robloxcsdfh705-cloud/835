@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>服務協議與隱私政策</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+            /* 關鍵修改：一進網頁，整個螢幕背景直接變全黑 */
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        /* 隱私授權彈窗層 */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 讓背景更黑、更有壓迫感 */
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+
+        .privacy-dialog {
+            width: 85%;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3); /* 給白框一點微微的紅光暗影，增加詭異感 */
+        }
+
+        .dialog-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .dialog-content {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            max-height: 240px;
+            overflow-y: auto;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .system-error-code {
+            font-family: monospace;
+            font-size: 11px;
+            color: #ff3333;
+            background: #fdf2f2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .dialog-footer {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-agree {
+            width: 100%;
+            height: 44px;
+            border-radius: 22px;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: #07c160;
+            color: #fff;
+            transition: opacity 0.2s;
+        }
+
+        .btn-agree:active {
+            opacity: 0.8;
+        }
+
+        /* 影片展示層 */
+        .scare-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 10;
+        }
+
+        video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .hidden { display: none !important; }
+        .no-cursor { cursor: none !important; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div id="overlay" class="overlay">
+        <div class="privacy-dialog">
+            <div class="dialog-title">個人資訊保護指引</div>
+            <div class="dialog-content">
+                <div class="system-error-code">CRITICAL_SEGMENT_FAULT [0x00004188]</div>
+                ☠ ̵̗͑H̶̩̏ȅ̴͇l̵̛͎p̶̲̏ ̵͙͘ḿ̴̱e̶͎̎ ☠ 🂱🂺🃁🃋 ⛧ ☠ 
+                <br>
+                E̶R̴R̷_̶D̷A̸T̴A̸_̶C̸O̸R̵R̷U̸P̵T̸E̸D̶ 本站依據中華民國《個人資料保護法》第 8 條與第 19 條規定
+                N̶U̵L̸L̴_̸P̶O̵I̷N̸T̴E̸R̷ ̶E̴X̸C̶P̵T̷I̴O̵N̸，向您履行蒐集、處理及利用個人資料之告知義務。
+                <br><br>
+                [SYS_DATA]: OxFF41 0x002A 0x88BC 0xDEADBEEF 0x00000000<br>
+                [⚡_LOG]: core_dump_failed_read_ptr_0x7FFF<br>
+                [ØØØ]: ⛚ ⎔ ⏆ ⏈ ⏛ ⏠ ⏧ ☠ ☣ ☯ ⚡ ⚰ ⚙<br>
+                S̷Y̸S̵T̶E̸M̶_̶M̴E̵M̶O̷R̶Y̵_̷L̴E̷A̵K̵ 當您點擊同意，即代表明確知悉本服務在非特定目的範圍內進行去識別化傳輸處理。
+                <br>
+                🪦 Ìñfør̃mātiøñ_Çørr̃µpt̃ëd_🪦 D̵E̴S̷T̸R̷O̵Y̵_̶L̶O̴C̷A̵L̷_̶C̷A̶C̴H̷E̷
+                包括基礎數據校驗、優化跨境用戶體驗以及保障核心雲端帳號安全。
+                <br><br>
+                Z̷A̵L̶G̶O̷_̸W̸A̴K̸E̸S̸_̸M̸E̵M̸O̷R̸Y̷_̷B̶U̴F̵F̴E̷R̸_̶O̵V̶E̷R̵F̴L̵O̸W̴
+                中華民國法規個資聲明：S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑_̷̯̀F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓ [STACK_OVERRUN_FATAL]
+                <br>
+                01001000 01000101 01001100 01001100 01001111
+            </div>
+            <div class="dialog-footer">
+                <button class="btn-agree" id="start-btn">同意並繼續</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="video-wrap" class="scare-container hidden">
+        <video id="video" src="https://pages.dev" loop playsinline></video>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const videoWrap = document.getElementById('video-wrap');
+        const overlay = document.getElementById('overlay');
+        const startBtn = document.getElementById('start-btn');
+
+        function tryFullScreen() {
+            const el = document.documentElement;
+            const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+            if (rfs) rfs.call(el).catch(() => {});
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                document.body.addEventListener('click', tryFullScreen, { once: true });
+            }
+        });
+
+        startBtn.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            videoWrap.classList.remove('hidden');
+            document.body.classList.add('no-cursor');
+
+            video.play().catch(() => {
+                video.muted = true;
+                video.play();
+            });
+
+            tryFullScreen();
+        });
+
+        window.onbeforeunload = () => "確定離開嗎？";
+    </script>
+</body>
+</html>
