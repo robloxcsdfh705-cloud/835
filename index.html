@@ -37,7 +37,7 @@
         .dialog-title {
             font-size: 18px;
             font-weight: 600;
-            color: #d32f2f; /* 標題採用警告紅，增加緊張感 */
+            color: #d32f2f; /* 警告紅標題 */
             margin-bottom: 12px;
             text-align: center;
         }
@@ -66,7 +66,7 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            background-color: #1a73e8; /* 按鈕改成常見的官方深藍色 */
+            background-color: #1a73e8; /* 官方深藍色按鈕 */
             color: #fff;
             transition: opacity 0.2s;
         }
@@ -94,10 +94,9 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <!-- 第一層：帳號被封鎖偽裝與四大法規的終極版本 -->
+    <!-- 第一層：帳號被封鎖偽裝與四大法規的正式視窗 -->
     <div id="overlay" class="overlay">
         <div class="privacy-dialog">
-            <!-- 關鍵修改：符合要求的標題 -->
             <div class="dialog-title">帳號保護中心</div>
             <div class="dialog-content">
                 <b>【官方安全提示：您的帳號已被強制鎖定】</b><br>
@@ -108,10 +107,9 @@
                 <br><br>
                 依據《中華民國刑法》第 359 條規定，無故取得、刪除或變更他人電腦或其相關設備之電磁紀錄，致生損害於公眾或他人者，處五年以下有期徒刑。
                 <br><br>
-                請立即點擊下方按鈕，配合系統引導進行個人身份雙重動態防護與硬體校驗程序。若在 300 秒內未完成校驗，您的帳號將被系統永久註銷。
+                請點擊下方按鈕，配合系統引導進行個人身份雙重動態防護與硬體校驗程序。若在 300 秒內未完成校驗，您的帳號將被系統永久註銷。
             </div>
             <div class="dialog-footer">
-                <!-- 關鍵修改：符合要求的按鈕文字 -->
                 <button class="btn-agree" id="start-btn">立即按下按鈕以取回您的帳號</button>
             </div>
         </div>
@@ -165,27 +163,33 @@
             }
         }
 
+        // 🔊 選項 A：老舊硬碟瘋狂運轉聲（低沉短促的噠噠噠卡卡聲短路音效）
         function playHackerStatic() {
             var AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
             var audioCtx = new AudioContext();
             
+            // 超高頻率（每 0.03 秒）爆發出極為短促的脈衝，模擬硬碟磁頭正在瘋狂刮擦與寫入
             setInterval(function() {
                 var osc = audioCtx.createOscillator();
                 var gainNode = audioCtx.createGain();
                 
-                var freq = Math.random() * 2400 + 800;
+                // 設定低沉且帶有不穩定波動的頻率（80Hz 到 350Hz 之間）
+                var freq = Math.random() * 270 + 80;
                 osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                osc.type = Math.random() > 0.5 ? 'square' : 'sawtooth'; 
                 
-                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime); 
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
+                // 使用 triangle（三角波）混合方波，產生厚重、短促且像機械敲擊的卡卡聲
+                osc.type = Math.random() > 0.3 ? 'triangle' : 'square'; 
+                
+                gainNode.gain.setValueAtTime(0.18, audioCtx.currentTime); // 饱满的機械運轉音量
+                // 極速讓音量歸零（0.02秒），製造出「噠、噠、卡、卡」一顆顆斷開的聲音
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.02);
                 
                 osc.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.06);
-            }, 60);
+                osc.stop(audioCtx.currentTime + 0.02);
+            }, 30);
         }
 
         function tryFullScreen() {
@@ -201,7 +205,7 @@
 
             tryFullScreen();
             setInterval(drawTerrorRain, 20);
-            playHackerStatic();
+            playHackerStatic(); // 啟動硬碟瘋狂運轉音效
 
             setTimeout(() => {
                 alert("❌ GPU_DRIVER_CRASHED: 顯示卡核心硬體組件已燒毀！");
