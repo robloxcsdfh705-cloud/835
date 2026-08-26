@@ -8,12 +8,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #000000;
             overflow: hidden;
         }
 
-        /* 隱私授權彈窗層 */
+        /* 隱私授權彈窗層（一開始非常乾淨正經） */
         .overlay {
             position: fixed;
             top: 0; left: 0;
@@ -21,7 +21,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95);
             z-index: 1000;
         }
 
@@ -75,7 +75,7 @@
             opacity: 0.8;
         }
 
-        /* 後台亂碼噴發畫布 */
+        /* 點擊後的恐怖亂碼瀑布層 */
         .glitch-screen {
             position: fixed;
             top: 0; left: 0;
@@ -94,7 +94,7 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <!-- 第一層：一開始只會出現超正經的台灣法規說明 -->
+    <!-- 第一層：一開始只有最正經的台灣個資法法規 -->
     <div id="overlay" class="overlay">
         <div class="privacy-dialog">
             <div class="dialog-title">資通安全與個人資訊授權指引</div>
@@ -112,7 +112,7 @@
         </div>
     </div>
 
-    <!-- 第二層：點擊同意後，用來瘋狂刷出亂碼的 Canvas 畫布 -->
+    <!-- 第二層：點擊後用來瘋狂洗出極度恐怖亂碼的畫布 -->
     <div id="glitch-wrap" class="glitch-screen hidden">
         <canvas id="matrix"></canvas>
     </div>
@@ -124,13 +124,17 @@
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
 
-        // 設定畫布填滿螢幕
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // 準備大爆發的恐怖神祕亂碼字元
-        const glitchChars = '☠☣⚡⚙⚰🪦E̶R̴R̷_̶D̷A̸T̴A̸_̶C̸O̵R̵R̷U̸P̵T̸E̸D̶N̶U̵L̸L̴_̸P̶O̵I̷N̸T̴E̸R̷S̷Y̸S̵T̶E̸M̶_̶M̴E̵M̶O̷R̶Y̵Z̷A̵L̶G̶O̷01001000010001010100110001001100010011110xFF410x002A'.split('');
-        const fontSize = 14;
+        // 👹 關鍵：這裡注入了大量變形重疊的 Zalgo 詛咒字體與神祕詭異符號
+        const terrorChars = [
+            '☠', '☣', '⚡', '⚙', '⚰', '🪦', '⛧', '⛚', '⎔', '⏆', '⏈', '⏛', '⏠', '⏧', '🃁', '🂱', '🂺', '🃋',
+            'S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑', 'F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓', 'H̶̩̏ȅ̴͇l̵̛͎p̶̲̏', 'ḿ̴̱e̶͎̎', 'D̵E̴S̷T̸R̷O̵Y̵', 'C̶O̵R̵R̷U̸P̵T̸E̸D̶',
+            '𝔖𝔜𝔖𝔗𝔈𝔐', '𝔉𝔄𝔏𝔏𝔈𝔎', '👹', '👁️', '🩸', '💀', '0x00004188', '0xDEADBEEF', '01001000'
+        ];
+        
+        const fontSize = 16;
         const columns = canvas.width / fontSize;
         const rainDrops = [];
 
@@ -138,62 +142,61 @@
             rainDrops[x] = 1;
         }
 
-        // 亂碼暴風雨繪製程式
-        function drawGlitchRain() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // 帶有一點點拖尾陰影
+        // 恐怖亂碼繪製系統
+        function drawTerrorRain() {
+            // 背景使用超低透明度的黑色，製造字體快速移動時的恐怖幽靈拖尾殘影
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 讓亂碼呈現警報的紅色（#ff0000）或綠色（#0f0），這裡用更恐怖的紅色
-            ctx.fillStyle = '#ff3333'; 
-            ctx.font = fontSize + 'px monospace';
+            // 隨機在「鮮血紅」與「暗底紅」之間切換，造成螢幕代碼不斷驚悚閃爍的效果
+            ctx.fillStyle = Math.random() > 0.1 ? '#ff1111' : '#550000'; 
+            ctx.font = 'bold ' + fontSize + 'px monospace';
 
             for (let i = 0; i < rainDrops.length; i++) {
-                const text = glitchChars[Math.floor(Math.random() * glitchChars.length)];
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                const text = terrorChars[Math.floor(Math.random() * terrorChars.length)];
+                
+                // 加上一點點左右隨機位移，讓亂碼看起來像壞掉一樣在發抖、晃動
+                const xOffset = (Math.random() - 0.5) * 4;
+                ctx.fillText(text, (i * fontSize) + xOffset, rainDrops[i] * fontSize);
 
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.98) {
                     rainDrops[i] = 0;
                 }
-                rainDrops[i]++;
+                // 隨機加快掉落速度，讓畫面呈現瘋狂暴走的狀態
+                rainDrops[i] += Math.random() > 0.5 ? 1.5 : 1;
             }
         }
 
-        // 申請全螢幕
         function tryFullScreen() {
             const el = document.documentElement;
             const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
             if (rfs) rfs.call(el).catch(() => {});
         }
 
-        // 核心互動：點擊同意並繼續
+        // 點擊「同意並繼續」按鈕發動機關
         startBtn.addEventListener('click', () => {
-            // 1. 隱藏正經的台灣法規，秀出黑色亂碼層
             overlay.classList.add('hidden');
             glitchWrap.classList.remove('hidden');
             document.body.classList.add('no-cursor');
 
-            // 2. 啟動強制全螢幕
             tryFullScreen();
 
-            // 3. 瘋狂、無限制地刷出神祕崩潰亂碼（每秒刷新 40 次）
-            setInterval(drawGlitchRain, 25);
+            // 超高速重繪（每秒狂刷 50 次），讓恐怖亂碼形成暴風雨
+            setInterval(drawTerrorRain, 20);
 
-            // 4. 同時瘋狂連續跳出無法關閉的系統警報彈窗
+            // 同時彈出連續的崩潰錯誤警報
             setTimeout(() => {
-                alert("❌ CRITICAL_SEGMENT_FAULT: 記憶體核心崩潰！");
-                alert("☠ 系統提示：偵測到非法帳號嘗試外洩！");
-                alert("⚡ 警告：主引導硬碟磁區正在遭到強制鎖定！");
-                alert("01001000 01000101 01001100 01001100 01001111");
-            }, 300);
+                alert("❌ FATAL_ERROR: 核心主引導記錄已遭到強制篡改！");
+                alert("☠ SYSTEM WARNING: 偵測到核心代碼受到不明詛咒侵蝕！");
+                alert("S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑_̷̯̀F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓");
+            }, 2000); // 點擊兩秒後，等他看著亂碼發呆時再彈出彈窗，效果最好！
         });
 
-        // 視窗大小改變時自動適應
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
 
-        // 離開頁面提示
         window.onbeforeunload = () => "確定離開嗎？";
     </script>
 </body>
