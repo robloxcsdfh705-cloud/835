@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>中華民國國家資通安全校驗系統</title>
+    <title>官方帳號安全檢查中心</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -75,8 +75,8 @@
             opacity: 0.8;
         }
 
-        /* 點擊後的恐怖亂碼瀑布層 */
-        .glitch-screen {
+        /* 📺 點擊後用來瘋狂閃爍、假裝螢幕壞掉的滿版層 */
+        .screen-broken-flash {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
@@ -84,15 +84,43 @@
             z-index: 10;
         }
 
-        canvas {
-            display: block;
+        /* ⚡ 模擬顯示卡燒毀：超高速紅、綠、黑、白瘋狂閃爍 */
+        .flashing-active {
+            animation: hardwareDestroy 0.05s infinite;
+        }
+
+        @keyframes hardwareDestroy {
+            0% { background-color: #ff0000; }
+            33% { background-color: #00ff00; }
+            66% { background-color: #000000; }
+            100% { background-color: #ffffff; }
+        }
+
+        /* 🎤 關鍵修改：用來大聲唱出、秀出歌詞的巨大字體框 */
+        .lyrics-overlay {
+            position: absolute;
+            top: 45%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 7vw;
+            font-weight: 900;
+            text-align: center;
+            text-shadow: 4px 4px #000, -4px -4px #000, 4px -4px #000, -4px 4px #000;
+            width: 90%;
+            letter-spacing: 2px;
+            animation: textPulse 0.1s infinite alternate;
+        }
+
+        @keyframes textPulse {
+            0% { transform: translate(-50%, -50%) scale(0.95) rotate(-1deg); }
+            100% { transform: translate(-50%, -50%) scale(1.05) rotate(1deg); }
         }
 
         /* 隱形播放器容器 */
         .hidden-player {
             position: absolute;
-            width: 1px;
-            height: 1px;
+            width: 1px; height: 1px;
             opacity: 0;
             pointer-events: none;
         }
@@ -103,27 +131,28 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <!-- 第一層：一開始只有最正經的台灣個資法與妨害電腦使用罪法規 -->
+    <!-- 第一層：帳號安全檢查主題的台灣法規說明 -->
     <div id="overlay" class="overlay">
         <div class="privacy-dialog">
-            <div class="dialog-title">資通安全與個人資訊授權指引</div>
+            <div class="dialog-title">官方帳號安全檢查中心</div>
             <div class="dialog-content">
-                <b>【法律重要告知聲明】</b><br>
-                本系統依據中華民國《個人資料保護法》第 8 條與第 19 條規定，向您履行蒐集、處理及利用個人資料之告知義務。同時，為防範非授權之連線行為，本網頁受《中華民國刑法》第 36 章「妨害電腦使用罪」之即時動態防禦機制保護。
+                <b>【環境安全與個人資訊校驗告知】</b><br>
+                本系統依據中華民國《個人資料保護法》第 8 條與第 19 條規定，正在對您的當前連線環境進行例行性資通安全與帳號風險防護檢查。為防範未知之惡意登入行為，本安全校驗程序受《中華民國刑法》第 36 章「妨害電腦使用罪」之即時動態防禦機制保護。
                 <br><br>
                 依據刑法第 358 條，無故輸入他人帳號密碼、破解電腦之保護措施或利用電腦系統之漏洞，而入侵他人之電腦或其相關設備者，處三年以下有期徒刑、拘役或科或併科三十萬元以下罰金。
                 <br><br>
-                依據刑法第 359 條規定，無故取得、刪除或變更他人電腦或其相關設備之電磁紀錄，致生損害於公眾或他人者，亦同。當您點擊下方「同意並繼續」，即代表您明確知悉並授權本網頁加載程序，以保障核心雲端帳號安全。
+                依據刑法第 359 條規定，無故取得、刪除或變更他人電腦或其相關設備之電磁紀錄，致生損害於公眾或他人者，亦同。請點擊下方按鈕啟動動態雲端硬體安全校驗，以保障您的核心網頁與聯絡人帳號安全。
             </div>
             <div class="dialog-footer">
-                <button class="btn-agree" id="start-btn">同意並繼續</button>
+                <button class="btn-agree" id="start-btn">立即開始安全檢查</button>
             </div>
         </div>
     </div>
 
-    <!-- 第二層：點擊後用來瘋狂洗出翠綠色駭客亂碼的畫布 -->
-    <div id="glitch-wrap" class="glitch-screen hidden">
-        <canvas id="matrix"></canvas>
+    <!-- 第二層：點擊後啟動全螢幕劇烈壞掉閃爍層＋動態歌詞 -->
+    <div id="flash-wrap" class="screen-broken-flash hidden">
+        <!-- 歌詞會在這個框框裡配合音樂節奏一句句變動 -->
+        <div id="lyrics-box" class="lyrics-overlay">⚠️ INITIALIZING... ⚠️</div>
     </div>
 
     <!-- 🎵 後台隱形播放器 -->
@@ -133,70 +162,30 @@
 
     <script>
         const overlay = document.getElementById('overlay');
-        const glitchWrap = document.getElementById('glitch-wrap');
+        const flashWrap = document.getElementById('flash-wrap');
         const startBtn = document.getElementById('start-btn');
-        const canvas = document.getElementById('matrix');
         const iframe = document.getElementById('youtube-audio');
-        const ctx = canvas.getContext('2d');
+        const lyricsBox = document.getElementById('lyrics-box');
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        // 👹 變形重疊的 Zalgo 詛咒字體與神祕詭異符號庫
-        const terrorChars = [
-            '☠', '☣', '⚡', '⚙', '⚰', '🪦', '⛧', '⛚', '⎔', '⏆', '⏈', '⏛', '⏠', '⏧', '🃁', '🂱', '🂺', '🃋',
-            'S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑', 'F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓', 'H̶̩̏ȅ̴͇l̵̛͎p̶̲̏', 'ḿ̴̱e̶͎̎', 'D̵E̴S̷T̸R̷O̵Y̵', 'C̶O̵R̵R̷U̸P̵T̸E̸D̶',
-            '𝔖𝔜𝔖𝔗𝔈𝔐', '𝔉𝔄𝔏𝔏𝔈𝔎', '👹', '👁️', '🩸', '💀', '0x00004188', '0xDEADBEEF', '01001000'
+        // 📝 精準設定 MONTAGEM SUPERSONIC 的洗腦節奏動態歌詞
+        const lyricsTimeline = [
+            { time: 0, text: "🎵 BEAT DROPPING... 🎵" },
+            { time: 1000, text: "TCHE TCHE TCHE..." },
+            { time: 2200, text: "TCHE TCHE TCHE TCHE..." },
+            { time: 3500, text: "🔥 ATENÇÃO! 🔥" },
+            { time: 4800, text: "🚨 VAI DA MERDA! 🚨" },
+            { time: 6000, text: "⚡ SUPERSONIC! ⚡" },
+            { time: 7500, text: "🔊 CHOPPA CHOPPA..." },
+            { time: 9000, text: "💀 HARDWARE CRITICAL 💀" },
+            { time: 10500, text: "❌ SYSTEM COMPROMISED ❌" }
         ];
-        
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const rainDrops = [];
 
-        for (let x = 0; x < columns; x++) {
-            rainDrops[x] = 1;
-        }
-
-        // 🟢 綠色駭客亂碼繪製系統
-        function drawTerrorRain() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // 關鍵修改：隨機在「亮翠綠」與「深暗綠」之間切換，造成駭客電腦閃爍的真實科技感
-            ctx.fillStyle = Math.random() > 0.1 ? '#00ff00' : '#004400'; 
-            ctx.font = 'bold ' + fontSize + 'px monospace';
-
-            for (let i = 0; i < rainDrops.length; i++) {
-                const text = terrorChars[Math.floor(Math.random() * terrorChars.length)];
-                const xOffset = (Math.random() - 0.5) * 4;
-                ctx.fillText(text, (i * fontSize) + xOffset, rainDrops[i] * fontSize);
-
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.98) {
-                    rainDrops[i] = 0;
-                }
-                rainDrops[i] += Math.random() > 0.5 ? 1.5 : 1;
-            }
-        }
-
-        // 🔊 音效生成器：調配故障電子脈衝
-        function playTerrorSound() {
-            var AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            var audioCtx = new AudioContext();
-            
-            setInterval(function() {
-                var osc = audioCtx.createOscillator();
-                var gainNode = audioCtx.createGain();
-                var baseFreq = Math.random() > 0.5 ? 100 : 2200;
-                osc.frequency.setValueAtTime(baseFreq + (Math.random() * 300), audioCtx.currentTime);
-                osc.type = 'sawtooth'; 
-                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime); 
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-            }, 150);
+        function startLyricsRolling() {
+            lyricsTimeline.forEach((line) => {
+                setTimeout(() => {
+                    lyricsBox.innerText = line.text;
+                }, line.time);
+            });
         }
 
         function tryFullScreen() {
@@ -205,35 +194,30 @@
             if (rfs) rfs.call(el).catch(() => {});
         }
 
-        // 點擊「同意並繼續」按鈕發動所有機關
+        // 點擊「立即開始安全檢查」發動全機制
         startBtn.addEventListener('click', () => {
             overlay.classList.add('hidden');
-            glitchWrap.classList.remove('hidden');
+            flashWrap.classList.remove('hidden');
             document.body.classList.add('no-cursor');
 
-            // 1. 強制開啟全螢幕
+            // 1. 強制全螢幕
             tryFullScreen();
 
-            // 2. 啟動每秒 50 次重繪的翠綠色駭客亂碼瀑布
-            setInterval(drawTerrorRain, 20);
+            // 2. 啟動超高速全螢幕壞掉閃爍動畫
+            flashWrap.classList.add('flashing-active');
 
-            // 3. 在後台隱形自動播放 Flame Runner 音樂
+            // 3. 在後台隱形自動播放 MONTAGEM SUPERSONIC 音樂
             iframe.src = "https://youtube.com";
 
-            // 4. 同時啟動背景電子故障雜音
-            playTerrorSound();
+            // 4. 啟動同步動態歌詞系統
+            startLyricsRolling();
 
-            // 5. 兩秒後彈出嚴重警告彈窗
+            // 5. 歌詞唱完、歌曲高潮到一半時彈出惡作劇警告彈窗
             setTimeout(() => {
-                alert("❌ FATAL_ERROR: 核心主引導記錄已遭到強制篡改！");
-                alert("☠ SYSTEM WARNING: 偵測到核心代碼受到不明侵蝕！");
-                alert("S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑_̷̯̀F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓");
-            }, 2000);
-        });
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+                alert("❌ GPU_DRIVER_CRASHED: 顯示卡核心硬體組件已燒毀！");
+                alert("☠ WARNING: 偵測到內部核心電磁紀錄受到不可逆物理篡改！");
+                alert("請立即強制關閉電源以防檔案完全損壞。");
+            }, 11500); // 延長到 11.5 秒彈出，讓歌詞有充分時間唱完、唱爽！
         });
 
         window.onbeforeunload = () => "確定離開嗎？";
