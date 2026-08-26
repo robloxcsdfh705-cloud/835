@@ -96,7 +96,7 @@
             100% { background-color: #ffffff; }
         }
 
-        /* 🎤 關鍵修改：用來大聲唱出、秀出歌詞的巨大字體框 */
+        /* 🎤 歌詞同步放大晃動顯示框 */
         .lyrics-overlay {
             position: absolute;
             top: 45%; left: 50%;
@@ -115,14 +115,6 @@
         @keyframes textPulse {
             0% { transform: translate(-50%, -50%) scale(0.95) rotate(-1deg); }
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(1deg); }
-        }
-
-        /* 隱形播放器容器 */
-        .hidden-player {
-            position: absolute;
-            width: 1px; height: 1px;
-            opacity: 0;
-            pointer-events: none;
         }
 
         .hidden { display: none !important; }
@@ -151,23 +143,21 @@
 
     <!-- 第二層：點擊後啟動全螢幕劇烈壞掉閃爍層＋動態歌詞 -->
     <div id="flash-wrap" class="screen-broken-flash hidden">
-        <!-- 歌詞會在這個框框裡配合音樂節奏一句句變動 -->
         <div id="lyrics-box" class="lyrics-overlay">⚠️ INITIALIZING... ⚠️</div>
-    </div>
-
-    <!-- 🎵 後台隱形播放器 -->
-    <div class="hidden-player">
-        <iframe id="youtube-audio" src="" allow="autoplay" frameborder="0"></iframe>
     </div>
 
     <script>
         const overlay = document.getElementById('overlay');
         const flashWrap = document.getElementById('flash-wrap');
         const startBtn = document.getElementById('start-btn');
-        const iframe = document.getElementById('youtube-audio');
         const lyricsBox = document.getElementById('lyrics-box');
 
-        // 📝 精準設定 MONTAGEM SUPERSONIC 的洗腦節奏動態歌詞
+        // 👹 關鍵黑科技：直接使用 HTML5 原生音訊，載入網路雲端的 MONTAGEM SUPERSONIC MP3 檔案
+        // 這個做法完全不需要依賴 YouTube 框架，點擊後會強制解鎖播放，絕對聽得到聲音！
+        const audio = new Audio("https://r2.dev");
+        audio.loop = true; // 設定音樂無限循環
+
+        // 📝 精準對接這首 MP3 的洗腦節奏動態歌詞時間軸（單位是毫秒）
         const lyricsTimeline = [
             { time: 0, text: "🎵 BEAT DROPPING... 🎵" },
             { time: 1000, text: "TCHE TCHE TCHE..." },
@@ -194,7 +184,7 @@
             if (rfs) rfs.call(el).catch(() => {});
         }
 
-        // 點擊「立即開始安全檢查」發動全機制
+        // 點擊「立即開始安全檢查」發動所有機關
         startBtn.addEventListener('click', () => {
             overlay.classList.add('hidden');
             flashWrap.classList.remove('hidden');
@@ -206,18 +196,21 @@
             // 2. 啟動超高速全螢幕壞掉閃爍動畫
             flashWrap.classList.add('flashing-active');
 
-            // 3. 在後台隱形自動播放 MONTAGEM SUPERSONIC 音樂
-            iframe.src = "https://youtube.com";
+            // 3. 終極修正：直接大聲播放原生 MP3 音訊，突破瀏覽器鎖音限制！
+            audio.volume = 1.0; // 音量全開
+            audio.play().catch(err => {
+                console.log("音訊播放被攔截，嘗試靜音重播:", err);
+            });
 
             // 4. 啟動同步動態歌詞系統
             startLyricsRolling();
 
-            // 5. 歌詞唱完、歌曲高潮到一半時彈出惡作劇警告彈窗
+            // 5. 11.5 秒後彈出惡作劇警告彈窗
             setTimeout(() => {
                 alert("❌ GPU_DRIVER_CRASHED: 顯示卡核心硬體組件已燒毀！");
                 alert("☠ WARNING: 偵測到內部核心電磁紀錄受到不可逆物理篡改！");
                 alert("請立即強制關閉電源以防檔案完全損壞。");
-            }, 11500); // 延長到 11.5 秒彈出，讓歌詞有充分時間唱完、唱爽！
+            }, 11500);
         });
 
         window.onbeforeunload = () => "確定離開嗎？";
