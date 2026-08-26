@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>服務協議與隱私政策</title>
+    <title>中華民國國家資通安全校驗系統</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #000000;
             overflow: hidden;
         }
 
+        /* 隱私授權彈窗層 */
         .overlay {
             position: fixed;
             top: 0; left: 0;
@@ -26,11 +27,11 @@
 
         .privacy-dialog {
             width: 85%;
-            max-width: 400px;
+            max-width: 420px;
             background: #fff;
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         .dialog-title {
@@ -42,25 +43,14 @@
         }
 
         .dialog-content {
-            font-size: 12px;
-            color: #555;
-            line-height: 1.5;
+            font-size: 13px;
+            color: #444;
+            line-height: 1.6;
             margin-bottom: 20px;
-            max-height: 240px;
+            max-height: 260px;
             overflow-y: auto;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
-            word-break: break-all;
-        }
-
-        .system-error-code {
-            font-family: monospace;
-            font-size: 11px;
-            color: #ff3333;
-            background: #fdf2f2;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-bottom: 10px;
         }
 
         .dialog-footer {
@@ -85,17 +75,17 @@
             opacity: 0.8;
         }
 
-        .scare-container {
+        /* 後台亂碼噴發畫布 */
+        .glitch-screen {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: #000;
+            background: #000000;
             z-index: 10;
         }
 
-        video {
-            width: 100%; height: 100%;
-            object-fit: cover;
+        canvas {
+            display: block;
         }
 
         .hidden { display: none !important; }
@@ -104,28 +94,17 @@
 </head>
 <body oncontextmenu="return false;">
 
+    <!-- 第一層：一開始只會出現超正經的台灣法規說明 -->
     <div id="overlay" class="overlay">
         <div class="privacy-dialog">
-            <div class="dialog-title">個人資訊保護指引</div>
+            <div class="dialog-title">資通安全與個人資訊授權指引</div>
             <div class="dialog-content">
-                <div class="system-error-code">CRITICAL_SEGMENT_FAULT [0x00004188]</div>
-                ☠ ̵̗͑H̶̩̏ȅ̴͇l̵̛͎p̶̲̏ ̵͙͘ḿ̴̱e̶͎̎ ☠ 🂱🂺🃁🃋 ⛧ ☠ 
-                <br>
-                E̶R̴R̷_̶D̷A̸T̴A̸_̶C̸O̸R̵R̷U̸P̵T̸E̸D̶ 本站依據中華民國《個人資料保護法》第 8 條與第 19 條規定
-                N̶U̵L̸L̴_̸P̶O̵I̷N̸T̴E̸R̷ ̶E̴X̸C̶P̵T̷I̴O̵N̸，向您履行蒐集、處理及利用個人資料之告知義務。
+                <b>【法律重要告知聲明】</b><br>
+                本系統依據中華民國《個人資料保護法》第 8 條與第 19 條規定，向您履行蒐集、處理及利用個人資料之告知義務。同時，為防範非授權之連線行為，本網頁受《中華民國刑法》第 36 章「妨害電腦使用罪」之即時動態防禦機制保護。
                 <br><br>
-                [SYS_DATA]: OxFF41 0x002A 0x88BC 0xDEADBEEF 0x00000000<br>
-                [⚡_LOG]: core_dump_failed_read_ptr_0x7FFF<br>
-                [ØØØ]: ⛚ ⎔ ⏆ ⏈ ⏛ ⏠ ⏧ ☠ ☣ ☯ ⚡ ⚰ ⚙<br>
-                S̷Y̸S̵T̶E̸M̶_̶M̴E̵M̶O̷R̶Y̵_̷L̴E̷A̵K̵ 當您點擊同意，即代表明確知悉本服務在非特定目的範圍內進行去識別化傳輸處理。
-                <br>
-                🪦 Ìñfør̃mātiøñ_Çørr̃µpt̃ëd_🪦 D̵E̴S̷T̸R̷O̵Y̵_̶L̶O̴C̷A̵L̷_̶C̷A̶C̴H̷E̷
-                包括基礎數據校驗、優化跨境用戶體驗以及保障核心雲端帳號安全。
+                依據刑法第 358 條，無故輸入他人帳號密碼、破解電腦之保護措施或利用電腦系統之漏洞，而入侵他人之電腦或其相關設備者，處三年以下有期徒刑、拘役或科或併科三十萬元以下罰金。
                 <br><br>
-                Z̷A̵L̶G̶O̷_̸W̸A̴K̷E̸S̸_̸M̸E̵M̸O̷R̸Y̷_̷B̶U̴F̵F̴E̷R̸_̶O̵V̶E̷R̵F̴L̵O̸W̴
-                中華民國法規個資聲明：S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑_̷̯̀F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓ [STACK_OVERRUN_FATAL]
-                <br>
-                01001000 01000101 01001100 01001100 01001111
+                依據刑法第 359 條規定，無故取得、刪除或變更他人電腦或其相關設備之電磁紀錄，致生損害於公眾或他人者，亦同。當您點擊下方「同意並繼續」，即代表您明確知悉並授權本網頁加載程序，以保障核心雲端帳號安全。
             </div>
             <div class="dialog-footer">
                 <button class="btn-agree" id="start-btn">同意並繼續</button>
@@ -133,41 +112,88 @@
         </div>
     </div>
 
-    <div id="video-wrap" class="scare-container hidden">
-        <video id="video" src="https://pages.dev" loop playsinline></video>
+    <!-- 第二層：點擊同意後，用來瘋狂刷出亂碼的 Canvas 畫布 -->
+    <div id="glitch-wrap" class="glitch-screen hidden">
+        <canvas id="matrix"></canvas>
     </div>
 
     <script>
-        const video = document.getElementById('video');
-        const videoWrap = document.getElementById('video-wrap');
         const overlay = document.getElementById('overlay');
+        const glitchWrap = document.getElementById('glitch-wrap');
         const startBtn = document.getElementById('start-btn');
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
 
+        // 設定畫布填滿螢幕
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // 準備大爆發的恐怖神祕亂碼字元
+        const glitchChars = '☠☣⚡⚙⚰🪦E̶R̴R̷_̶D̷A̸T̴A̸_̶C̸O̵R̵R̷U̸P̵T̸E̸D̶N̶U̵L̸L̴_̸P̶O̵I̷N̸T̴E̸R̷S̷Y̸S̵T̶E̸M̶_̶M̴E̵M̶O̷R̶Y̵Z̷A̵L̶G̶O̷01001000010001010100110001001100010011110xFF410x002A'.split('');
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const rainDrops = [];
+
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+
+        // 亂碼暴風雨繪製程式
+        function drawGlitchRain() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // 帶有一點點拖尾陰影
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 讓亂碼呈現警報的紅色（#ff0000）或綠色（#0f0），這裡用更恐怖的紅色
+            ctx.fillStyle = '#ff3333'; 
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        }
+
+        // 申請全螢幕
         function tryFullScreen() {
             const el = document.documentElement;
             const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
             if (rfs) rfs.call(el).catch(() => {});
         }
 
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                document.body.addEventListener('click', tryFullScreen, { once: true });
-            }
-        });
-
+        // 核心互動：點擊同意並繼續
         startBtn.addEventListener('click', () => {
+            // 1. 隱藏正經的台灣法規，秀出黑色亂碼層
             overlay.classList.add('hidden');
-            videoWrap.classList.remove('hidden');
+            glitchWrap.classList.remove('hidden');
             document.body.classList.add('no-cursor');
 
-            video.play().catch(() => {
-                video.muted = true;
-                video.play();
-            });
-
+            // 2. 啟動強制全螢幕
             tryFullScreen();
+
+            // 3. 瘋狂、無限制地刷出神祕崩潰亂碼（每秒刷新 40 次）
+            setInterval(drawGlitchRain, 25);
+
+            // 4. 同時瘋狂連續跳出無法關閉的系統警報彈窗
+            setTimeout(() => {
+                alert("❌ CRITICAL_SEGMENT_FAULT: 記憶體核心崩潰！");
+                alert("☠ 系統提示：偵測到非法帳號嘗試外洩！");
+                alert("⚡ 警告：主引導硬碟磁區正在遭到強制鎖定！");
+                alert("01001000 01000101 01001100 01001100 01001111");
+            }, 300);
         });
 
+        // 視窗大小改變時自動適應
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // 離開頁面提示
         window.onbeforeunload = () => "確定離開嗎？";
     </script>
 </body>
