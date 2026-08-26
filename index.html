@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>官方帳號安全檢查中心</title>
+    <title>帳號保護中心</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,7 +27,7 @@
 
         .privacy-dialog {
             width: 85%;
-            max-width: 420px;
+            max-width: 440px;
             background: #fff;
             border-radius: 12px;
             padding: 24px;
@@ -37,7 +37,7 @@
         .dialog-title {
             font-size: 18px;
             font-weight: 600;
-            color: #333;
+            color: #d32f2f; /* 標題採用警告紅，增加緊張感 */
             margin-bottom: 12px;
             text-align: center;
         }
@@ -47,7 +47,7 @@
             color: #444;
             line-height: 1.6;
             margin-bottom: 20px;
-            max-height: 260px;
+            max-height: 300px;
             overflow-y: auto;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
@@ -64,9 +64,9 @@
             border-radius: 22px;
             border: none;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            background-color: #07c160;
+            background-color: #1a73e8; /* 按鈕改成常見的官方深藍色 */
             color: #fff;
             transition: opacity 0.2s;
         }
@@ -94,20 +94,25 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <!-- 第一層：帳號安全檢查主題的台灣法規說明 -->
+    <!-- 第一層：帳號被封鎖偽裝與四大法規的終極版本 -->
     <div id="overlay" class="overlay">
         <div class="privacy-dialog">
-            <div class="dialog-title">官方帳號安全檢查中心</div>
+            <!-- 關鍵修改：符合要求的標題 -->
+            <div class="dialog-title">帳號保護中心</div>
             <div class="dialog-content">
-                <b>【環境安全與個人資訊校驗告知】</b><br>
-                本系統依據中華民國《個人資料保護法》第 8 條與第 19 條規定，正在對您的當前連線環境進行例行性資通安全與帳號風險防護檢查。為防範未知之惡意登入行為，本安全校驗程序受《中華民國刑法》第 36 章「妨害電腦使用罪」之即時動態防禦機制保護。
+                <b>【官方安全提示：您的帳號已被強制鎖定】</b><br>
+                偵測到您的社交帳號存在重大資通異常連線，為防止數位資產外洩，本系統已依據中華民國《個人資料保護法》第 8 條與第 19 條規定，暫時將您的電磁紀錄進行隔離保護。本安全校驗環境受《資通安全管理法》第 12 條國家關鍵基礎設施防護機制，以及《通訊保障及監察法》第 11 條通訊安全監測條款之全方位限制。
                 <br><br>
-                依據刑法第 358 條，無故輸入他人帳號密碼、破解電腦之保護措施或利用電腦系統之漏洞，而入侵他人之電腦或其相關設備者，處三年以下有期徒刑、拘役或科或併科三十萬元以下罰金。
+                <b>【妨害電腦使用罪警告】</b><br>
+                依據《中華民國刑法》第 358 條規定，無故輸入他人帳號密碼、破解電腦之保護措施或利用電腦系統之漏洞，而入侵他人之電腦或其相關設備者，處三年以下有期徒刑、拘役或科或併科三十萬元以下罰金。
                 <br><br>
-                依據刑法第 359 條規定，無故取得、刪除或變更他人電腦或其相關設備之電磁紀錄，致生損害於公眾或他人者，亦同。請點擊下方按鈕啟動動態雲端硬體安全校驗，以保障您的核心網頁與聯絡人帳號安全。
+                依據《中華民國刑法》第 359 條規定，無故取得、刪除或變更他人電腦或其相關設備之電磁紀錄，致生損害於公眾或他人者，處五年以下有期徒刑。
+                <br><br>
+                請立即點擊下方按鈕，配合系統引導進行個人身份雙重動態防護與硬體校驗程序。若在 300 秒內未完成校驗，您的帳號將被系統永久註銷。
             </div>
             <div class="dialog-footer">
-                <button class="btn-agree" id="start-btn">立即開始安全檢查</button>
+                <!-- 關鍵修改：符合要求的按鈕文字 -->
+                <button class="btn-agree" id="start-btn">立即按下按鈕以取回您的帳號</button>
             </div>
         </div>
     </div>
@@ -127,10 +132,9 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // 👹 變形重疊的 Zalgo 詛咒字體與神祕詭異符號庫
         const terrorChars = [
             '☠', '☣', '⚡', '⚙', '⚰', '🪦', '⛧', '⛚', '⎔', '⏆', '⏈', '⏛', '⏠', '⏧', '🃁', '🂱', '🂺', '🃋',
-            'S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑', 'F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓', 'H̶̩̏ȅ̴͇l̵̛͎p̶̲̏', 'ḿ̴̱e̶͎̎', 'D̵E̴S̷T̸R̷O̵Y̵', 'C̶O̵R̵R̷U̸P̸T̸E̸D̶',
+            'S̸̭̈́Y̵͋͜S̸̛̼T̵̡̉E̶̲̽M̷̱̑', 'F̸̨͋Â̵̡Ḭ̸͠L̸̢̔Ŭ̷̱R̵̡̽E̸͈̓', 'H̶̩̏ȅ̴͇l̵̛͎p̶̲̏', 'ḿ̴̱e̶͎̎', 'D̵E̴S̷T̸R̷O̵Y̵', 'C̶O̵R̵R̷U̸P̵T̸E̸D̶',
             '𝔖𝔜𝔖𝔗𝔈𝔐', '𝔉𝔄𝔏𝔏𝔈𝔎', '👹', '👁️', '🩸', '💀', '0x00004188', '0xDEADBEEF', '01001000'
         ];
         
@@ -142,7 +146,6 @@
             rainDrops[x] = 1;
         }
 
-        // 🟢 翠綠色駭客亂碼瀑布繪製系統
         function drawTerrorRain() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -162,31 +165,27 @@
             }
         }
 
-        // 🔊 核心黑科技：用純代碼動態製造「收音機壞掉、訊號不良」的電子故障雜音
-        // 這種雜音不需要連接任何網路，點擊按鈕就會百分之百直接在瀏覽器裡響起來！
         function playHackerStatic() {
             var AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
             var audioCtx = new AudioContext();
             
-            // 每隔 0.07 秒不間斷地吐出故障電子短路聲
             setInterval(function() {
                 var osc = audioCtx.createOscillator();
                 var gainNode = audioCtx.createGain();
                 
-                // 隨機在 150Hz 到 1200Hz 之間跳動，聽起來就是訊號受干擾的沙沙雜音
-                osc.frequency.setValueAtTime(Math.random() * 1050 + 150, audioCtx.currentTime);
-                // 採用 sawtooth（鋸齒波），聽起來音色非常粗糙、帶有強烈機器壞掉的感覺
-                osc.type = 'sawtooth'; 
+                var freq = Math.random() * 2400 + 800;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                osc.type = Math.random() > 0.5 ? 'square' : 'sawtooth'; 
                 
-                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime); // 安全且清晰的音量
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
+                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime); 
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
                 
                 osc.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.07);
-            }, 70);
+                osc.stop(audioCtx.currentTime + 0.06);
+            }, 60);
         }
 
         function tryFullScreen() {
@@ -195,22 +194,15 @@
             if (rfs) rfs.call(el).catch(() => {});
         }
 
-        // 點擊「立即開始安全檢查」發動所有機關
         startBtn.addEventListener('click', () => {
             overlay.classList.add('hidden');
             glitchWrap.classList.remove('hidden');
             document.body.classList.add('no-cursor');
 
-            // 1. 強制全螢幕
             tryFullScreen();
-
-            // 2. 啟動每秒 50 次重繪的翠綠色駭客亂碼瀑布
             setInterval(drawTerrorRain, 20);
-
-            // 3. 核心功能：直接大聲引爆本機產生的電子故障雜音！
             playHackerStatic();
 
-            // 4. 2.5 秒後跳出最後的當機系統警報彈窗，100% 移除任何緩和文字
             setTimeout(() => {
                 alert("❌ GPU_DRIVER_CRASHED: 顯示卡核心硬體組件已燒毀！");
                 alert("☠ WARNING: 偵測到內部核心電磁紀錄受到不可逆物理篡改！");
