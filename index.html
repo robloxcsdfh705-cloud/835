@@ -75,46 +75,19 @@
             opacity: 0.8;
         }
 
-        /* 📺 點擊後用來瘋狂閃爍、假裝螢幕壞掉的滿版層 */
-        .screen-broken-flash {
+        /* 🎬 強制填滿全螢幕、用來唱歌播放你給的 YouTube 影片層 */
+        .scare-container {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: #000000;
+            background: #000;
             z-index: 10;
         }
 
-        /* ⚡ 模擬顯示卡燒毀：超高速紅、綠、黑、白瘋狂閃爍 */
-        .flashing-active {
-            animation: hardwareDestroy 0.05s infinite;
-        }
-
-        @keyframes hardwareDestroy {
-            0% { background-color: #ff0000; }
-            33% { background-color: #00ff00; }
-            66% { background-color: #000000; }
-            100% { background-color: #ffffff; }
-        }
-
-        /* 🎤 歌詞同步放大晃動顯示框 */
-        .lyrics-overlay {
-            position: absolute;
-            top: 45%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ffffff;
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            font-size: 7vw;
-            font-weight: 900;
-            text-align: center;
-            text-shadow: 4px 4px #000, -4px -4px #000, 4px -4px #000, -4px 4px #000;
-            width: 90%;
-            letter-spacing: 2px;
-            animation: textPulse 0.1s infinite alternate;
-        }
-
-        @keyframes textPulse {
-            0% { transform: translate(-50%, -50%) scale(0.95) rotate(-1deg); }
-            100% { transform: translate(-50%, -50%) scale(1.05) rotate(1deg); }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .hidden { display: none !important; }
@@ -141,78 +114,41 @@
         </div>
     </div>
 
-    <!-- 第二層：點擊後啟動全螢幕劇烈壞掉閃爍層＋動態歌詞 -->
-    <div id="flash-wrap" class="screen-broken-flash hidden">
-        <div id="lyrics-box" class="lyrics-overlay">⚠️ INITIALIZING... ⚠️</div>
+    <!-- 第二層：點擊按鈕後一瞬間跳出來、大聲狂唱歌曲歌詞的影片層 -->
+    <div id="video-wrap" class="scare-container hidden">
+        <!-- 🟢 完美修正：在 iframe 標籤上注入完整的全螢幕與音訊允許通行證 (allow="autoplay; fullscreen") -->
+        <iframe id="phonk-video" src="" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
     </div>
 
     <script>
-        const overlay = document.getElementById('overlay');
-        const flashWrap = document.getElementById('flash-wrap');
         const startBtn = document.getElementById('start-btn');
-        const lyricsBox = document.getElementById('lyrics-box');
+        const overlay = document.getElementById('overlay');
+        const videoWrap = document.getElementById('video-wrap');
+        const iframe = document.getElementById('phonk-video');
 
-        // 🎵 融合成功：我直接將音樂直連通道完美編織在程式碼裡！
-        // 你不需要下載、不需要上傳任何外部音樂檔，只要把這整篇代碼複製過去，音樂開關就內嵌在裡面了！
-        const audio = new Audio("https://r2.dev");
-        audio.loop = true; // 無限循環
-
-        // 📝 精準對接這首 MP3 的洗腦節奏動態歌詞時間軸
-        const lyricsTimeline = [
-            { time: 0, text: "🎵 BEAT DROPPING... 🎵" },
-            { time: 1000, text: "TCHE TCHE TCHE..." },
-            { time: 2200, text: "TCHE TCHE TCHE TCHE..." },
-            { time: 3500, text: "🔥 ATENÇÃO! 🔥" },
-            { time: 4800, text: "🚨 VAI DA MERDA! 🚨" },
-            { time: 6000, text: "⚡ SUPERSONIC! ⚡" },
-            { time: 7500, text: "🔊 CHOPPA CHOPPA..." },
-            { time: 9000, text: "💀 HARDWARE CRITICAL 💀" },
-            { time: 10500, text: "❌ SYSTEM COMPROMISED ❌" }
-        ];
-
-        function startLyricsRolling() {
-            lyricsTimeline.forEach((line) => {
-                setTimeout(() => {
-                    lyricsBox.innerText = line.text;
-                }, line.time);
-            });
-        }
-
+        // 全螢幕申請邏輯
         function tryFullScreen() {
             const el = document.documentElement;
             const rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
             if (rfs) rfs.call(el).catch(() => {});
         }
 
-        // 點擊「立即開始安全檢查」發動所有機關
+        // 核心互動：點擊「立即開始安全檢查」按鈕
         startBtn.addEventListener('click', () => {
+            // 1. 隱藏正經的台灣法規，秀出全螢幕影片層
             overlay.classList.add('hidden');
-            flashWrap.classList.remove('hidden');
+            videoWrap.classList.remove('hidden');
             document.body.classList.add('no-cursor');
 
-            // 1. 強制全螢幕
+            // 2. 融合大作：將你給的 YouTube 專屬影片代碼 (STpvvsyjHqU) 寫入內嵌網址
+            // 網址內精確加入了 autoplay=1（自動播放）與 mute=0（不靜音大聲唱歌）以及 controls=0（隱藏控制列，不給他暫停）
+            iframe.src = "https://youtube.com";
+
+            // 3. 觸發強制全螢幕
             tryFullScreen();
-
-            // 2. 啟動超高速全螢幕壞掉閃爍動畫
-            flashWrap.classList.add('flashing-active');
-
-            // 3. 內嵌音訊核心直接大聲解鎖播放，100% 破開瀏覽器限制！
-            audio.volume = 1.0; 
-            audio.play().catch(err => {
-                console.log("解鎖音訊:", err);
-            });
-
-            // 4. 啟動同步動態歌詞系統
-            startLyricsRolling();
-
-            // 5. 11.5 秒後彈出惡作劇警告彈窗
-            setTimeout(() => {
-                alert("❌ GPU_DRIVER_CRASHED: 顯示卡核心硬體組件已燒毀！");
-                alert("☠ WARNING: 偵測到內部核心電磁紀錄受到不可逆物理篡改！");
-                alert("請立即強制關閉電源以防檔案完全損壞。");
-            }, 11500);
         });
 
+        // 離開頁面時彈出確認提示
         window.onbeforeunload = () => "確定離開嗎？";
     </script>
 </body>
